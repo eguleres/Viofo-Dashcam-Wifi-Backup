@@ -14,7 +14,7 @@ export class Settings {
 
   public static async getDashcamModel () {
     let model = properties.get('dashcam.model') as string
-    model = model ?? 'VIOFOA199MINI'
+    model = model ?? 'VIOFOT130'
     return model
   }
 
@@ -27,7 +27,8 @@ export class Settings {
   }
 
   public static async getDownloadDirectory () {
-    return '/mnt/mydrive'
+    // return '/mnt/mydrive'
+    return '/Users/emreguler/Downloads/viofo'
   }
 
   public static async getSMBSettings () {

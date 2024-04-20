@@ -6,7 +6,7 @@ import { Settings } from './Settings'
 export class DashcamDownloader {
   public static async downloadLockedVideosFromDashcam () {
     GlobalState.homeTransferDone = false
-    RaspiLED.operation = 'DASHCAMTRANSFER'
+     RaspiLED.operation = 'DASHCAMTRANSFER'
     switch (await Settings.getDashcamModel()) {
       case 'VIOFOT130':
         await VIOFO.downloadLockedVideosFromDashcam()

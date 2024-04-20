@@ -14,7 +14,7 @@ const appStart = async () => {
 
   console.log('App started')
 
-  RaspiLED.initialize()
+ // RaspiLED.initialize()
 
   if (!fs.existsSync((await Settings.getDownloadDirectory()) + '/locked')) {
     fs.mkdirSync((await Settings.getDownloadDirectory()))
