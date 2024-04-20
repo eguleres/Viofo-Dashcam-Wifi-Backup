@@ -27,7 +27,7 @@ export class SMB {
 
     // let filelist = await client.readdir("");
 
-    const lockedFilesDirectory = await Settings.getDownloadDirectory() + '/locked'
+    const lockedFilesDirectory = await Settings.getDownloadDirectory() 
     const lockedFiles = fs.readdirSync(lockedFilesDirectory)
 
     for (const file of lockedFiles) {

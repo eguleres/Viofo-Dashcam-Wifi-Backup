@@ -16,9 +16,9 @@ const appStart = async () => {
 
  // RaspiLED.initialize()
 
-  if (!fs.existsSync((await Settings.getDownloadDirectory()) + '/locked')) {
+  if (!fs.existsSync((await Settings.getDownloadDirectory()))) {
     fs.mkdirSync((await Settings.getDownloadDirectory()))
-    fs.mkdirSync((await Settings.getDownloadDirectory()) + '/locked')
+    fs.mkdirSync((await Settings.getDownloadDirectory()))
   }
 
   await Wifi.enableWifi()
