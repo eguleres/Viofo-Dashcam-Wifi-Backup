@@ -120,7 +120,7 @@ export class VIOFO {
       const statB = Fs.statSync(Path.join(diskPath, b));
       return statA.birthtime.getTime() - statB.birthtime.getTime();
     });
-    const filesToDelete = sortedFiles.slice(0, 20);
+    const filesToDelete = sortedFiles.slice(0, 50);
     for (const file of filesToDelete) {
       const filePath = Path.join(diskPath, file);
       await Fs.promises.unlink(filePath);
@@ -129,8 +129,7 @@ export class VIOFO {
 
 
   private static async downloadVideo (file: string, downloadDirectory: string, downloadUrl: string) {
-    this.deleteOldDayVideoFromDisk(downloadDirectory) 
-    if (!await enoughSpaceAvailable(100 * 1024 * 1024)) {
+      if (!await enoughSpaceAvailable(100 * 1024 * 1024)) {
       console.log('Not enough space available.')
       this.deleteOldDayVideoFromDisk(downloadDirectory)  //delete oldest 20 file from path
       GlobalState.dashcamTransferDone = true
