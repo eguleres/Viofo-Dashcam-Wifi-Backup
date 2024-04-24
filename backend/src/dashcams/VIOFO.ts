@@ -52,9 +52,15 @@ export class VIOFO {
         });
         console.log(links);
 
+        this.deletelatestVideoFromDisk(downloadDirectory)  //delete latest downloaded video in case of any download interruption from last download
 
+        // Prevent download of existing files in the download directory
+        const files = await Fs.promises.readdir(downloadDirectory);
+        const existingFiles = files.map(file => Path.basename(file))
+        const linkstoMissingFiles = links.filter(link => !existingFiles.includes(Path.basename(link)))
+        
 
-        for(const file of links){
+      for(const file of linkstoMissingFiles){
 
           let downloadUrl = protocolAndIp + file
           console.log(downloadUrl)
@@ -90,10 +96,17 @@ export class VIOFO {
           }
         });
         console.log(links);
+    
+        this.deletelatestVideoFromDisk(downloadDirectory)   //delete latest downloaded video in case of any download interruption from last download
 
+        
+        // Prevent download of existing files in the download directory
+        const files = await Fs.promises.readdir(downloadDirectory);
+        const existingFiles = files.map(file => Path.basename(file))
+        const linkstoMissingFiles = links.filter(link => !existingFiles.includes(Path.basename(link)))
+        
 
-
-        for(const file of links){
+         for(const file of linkstoMissingFiles){
 
           let downloadUrl = protocolAndIp + file
           console.log(downloadUrl)
@@ -127,6 +140,21 @@ export class VIOFO {
     }
   }
 
+  private static async deletelatestVideoFromDisk(diskPath: string){
+    
+    const files = await Fs.promises.readdir(diskPath);
+    const sortedFiles = files.sort((a, b) => {
+      const statA = Fs.statSync(Path.join(diskPath, a));
+      const statB = Fs.statSync(Path.join(diskPath, b));
+      return statA.birthtime.getTime() - statB.birthtime.getTime();
+    });
+    const filesToDelete = sortedFiles.slice(0, 1);
+    for (const file of filesToDelete) {
+      const filePath = Path.join(diskPath, file);
+      await Fs.promises.unlink(filePath);
+    }
+  }
+
 
   private static async downloadVideo (file: string, downloadDirectory: string, downloadUrl: string) {
       if (!await enoughSpaceAvailable(100 * 1024 * 1024)) {
@@ -135,6 +163,7 @@ export class VIOFO {
       GlobalState.dashcamTransferDone = true
       throw new Error('Not enough space available')
     }
+
     return await new Promise((resolve, reject) => {
       console.log('Downloading  video', file)
 
