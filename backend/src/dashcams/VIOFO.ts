@@ -32,8 +32,8 @@ export class VIOFO {
     const downloadDirectory = await Settings.getDownloadDirectory()
     const response = await axios.get(protocolAndIp + '/DCIM/Movie')
 
-    const parser = new XMLParser()
-    const parsedResponse: FileListResponse = parser.parse(await response.data)
+    
+  
         console.log(await response.data)
         const doc=new DOMParser().parseFromString(await response.data,'text/html')
       
@@ -52,8 +52,8 @@ export class VIOFO {
         });
         console.log(links);
 
-        this.deletelatestVideoFromDisk(downloadDirectory)  //delete latest downloaded video in case of any download interruption from last download
-
+        await this.deletelatestVideoFromDisk(downloadDirectory)  //delete latest downloaded video in case of any download interruption from last download
+       
         // Prevent download of existing files in the download directory
         const files = await Fs.promises.readdir(downloadDirectory);
         const existingFiles = files.map(file => Path.basename(file))
@@ -77,8 +77,7 @@ export class VIOFO {
     const downloadDirectory = await Settings.getDownloadDirectory()
     const response = await axios.get(protocolAndIp + '/DCIM/Movie/Parking')
 
-    const parser = new XMLParser()
-    const parsedResponse: FileListResponse = parser.parse(await response.data)
+    
         console.log(await response.data)
         const doc=new DOMParser().parseFromString(await response.data,'text/html')
       
@@ -97,14 +96,14 @@ export class VIOFO {
         });
         console.log(links);
     
-        this.deletelatestVideoFromDisk(downloadDirectory)   //delete latest downloaded video in case of any download interruption from last download
-
         
+        await this.deletelatestVideoFromDisk(downloadDirectory);  //delete latest downloaded video in case of any download interruption from last download
+
         // Prevent download of existing files in the download directory
         const files = await Fs.promises.readdir(downloadDirectory);
-        const existingFiles = files.map(file => Path.basename(file))
-        const linkstoMissingFiles = links.filter(link => !existingFiles.includes(Path.basename(link)))
-        
+        const existingFiles = files.map(file => Path.basename(file));
+        const linkstoMissingFiles = links.filter(link => !existingFiles.includes(Path.basename(link)));
+
 
          for(const file of linkstoMissingFiles){
 
@@ -146,9 +145,10 @@ export class VIOFO {
     const sortedFiles = files.sort((a, b) => {
       const statA = Fs.statSync(Path.join(diskPath, a));
       const statB = Fs.statSync(Path.join(diskPath, b));
-      return statA.birthtime.getTime() - statB.birthtime.getTime();
+      return statB.birthtime.getTime() - statA.birthtime.getTime(); // Sort in descending order
     });
     const filesToDelete = sortedFiles.slice(0, 1);
+    console.log('deleted video:' + filesToDelete)
     for (const file of filesToDelete) {
       const filePath = Path.join(diskPath, file);
       await Fs.promises.unlink(filePath);

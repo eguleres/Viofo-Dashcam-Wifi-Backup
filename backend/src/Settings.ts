@@ -29,6 +29,7 @@ export class Settings {
   public static async getDownloadDirectory () {
     // return '/mnt/mydrive'
     return  '/Users/emreguler/Library/CloudStorage/OneDrive-Personal/viofo'
+   // return '/Volumes/Untitled/Viofo'
   }
 
   public static async getSMBSettings () {
