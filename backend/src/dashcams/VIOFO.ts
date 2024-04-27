@@ -52,7 +52,7 @@ export class VIOFO {
         });
         console.log(links);
 
-        await this.deletelatestVideoFromDisk(downloadDirectory)  //delete latest downloaded video in case of any download interruption from last download
+        await this.deleteNewestVideoFromDisk(downloadDirectory)  //delete latest downloaded video in case of any download interruption from last download
        
         // Prevent download of existing files in the download directory
         const files = await Fs.promises.readdir(downloadDirectory);
@@ -97,7 +97,7 @@ export class VIOFO {
         console.log(links);
     
         
-        await this.deletelatestVideoFromDisk(downloadDirectory);  //delete latest downloaded video in case of any download interruption from last download
+        await this.deleteNewestVideoFromDisk(downloadDirectory);  //delete latest downloaded video in case of any download interruption from last download
 
         // Prevent download of existing files in the download directory
         const files = await Fs.promises.readdir(downloadDirectory);
@@ -139,20 +139,17 @@ export class VIOFO {
     }
   }
 
-  private static async deletelatestVideoFromDisk(diskPath: string){
-    
+  private static async deleteNewestVideoFromDisk(diskPath: string) {
     const files = await Fs.promises.readdir(diskPath);
     const sortedFiles = files.sort((a, b) => {
       const statA = Fs.statSync(Path.join(diskPath, a));
       const statB = Fs.statSync(Path.join(diskPath, b));
       return statB.birthtime.getTime() - statA.birthtime.getTime(); // Sort in descending order
     });
-    const filesToDelete = sortedFiles.slice(0, 1);
-    console.log('deleted video:' + filesToDelete)
-    for (const file of filesToDelete) {
-      const filePath = Path.join(diskPath, file);
-      await Fs.promises.unlink(filePath);
-    }
+    const fileToDelete = sortedFiles[0];
+    console.log('Deleted video: ' + fileToDelete);
+    const filePath = Path.join(diskPath, fileToDelete);
+    await Fs.promises.unlink(filePath);
   }
 
 
