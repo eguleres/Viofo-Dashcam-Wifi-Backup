@@ -1,7 +1,6 @@
 # dashcam-transporter
 Application running on a raspberry pi (or other debian based platforms), to transfer and archive your dashcam video files to your preferred storage
 
-![Transfer illustration](/docs/img/transfer_illustration.svg "Transfer illustration")
 
 # How it works
 - The application is searching for the WIfi of your dashcam
